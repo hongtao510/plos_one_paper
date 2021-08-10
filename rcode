@@ -1,0 +1,94 @@
+library(R.matlab)
+library(Rcompression)
+library(fields)
+library(base)
+
+#library(RGraphics)
+#LL<-readMat("Ke.mat",fixNames=TRUE)
+#bplot(Ke,style="quantile",outlier=FALSE)
+
+####load the data############
+Ke<-read.table("Ke.txt", header=F)
+Ach<-read.table("Ach.txt", header=F)
+Den<-read.table("Den.txt", header=F)
+Df<-read.table("Df.txt", header=F)
+Mass_t<-read.table("Mass_t.txt", header=F)
+P<-read.table("P.txt", header=F)
+Risk<-read.table("Risk.txt", header=F)
+Mf1<-read.table("Mf1.txt", header=F)
+Mf3<-read.table("Mf3.txt", header=F)
+Mf5<-read.table("Mf5.txt", header=F)
+Mf10<-read.table("Mf10.txt", header=F)
+Re1<-read.table("Re1.txt", header=F)
+Re3<-read.table("Re3.txt", header=F)
+Re5<-read.table("Re5.txt", header=F)
+Re10<-read.table("Re10.txt", header=F)
+Vg1<-read.table("Vg1.txt", header=F)
+Vg3<-read.table("Vg3.txt", header=F)
+Vg5<-read.table("Vg5.txt", header=F)
+Vg10<-read.table("Vg10.txt", header=F)
+Mass_f00<-read.table("Mass_f00.txt", header=F)
+Mass_nose00<-read.table("Mass_nose00.txt", header=F)
+Mass_ec_6<-read.table("Mass_ec_6.txt", header=F)
+Mass_utf_6<-read.table("Mass_utf_6.txt", header=F)
+Mass_w_6<-read.table("Mass_w_6.txt", header=F)
+Pr<-read.table("Pr.txt", header=F)
+
+par(mfcol=c(2,3),cex=1.0) 
+bplot(Mass_t,style="quantile",outlier=FALSE,log="y",ylim=c(1e5,1e12),labels=c("Prior", "1", "2", "3", "4", "5", "6"),xlab='Total release quantity',ylab='Number of spores')
+bplot(Df,style="quantile",outlier=FALSE,log="y",ylim=c(1e-4,1e-2),labels=c("Prior", "1", "2", "3", "4", "5", "6"),xlab='Fraction of inhalation dose and total release')
+bplot(Risk,style="quantile",outlier=FALSE,log="y",ylim=c(1e-5,1e0),labels=c("Prior", "1", "2", "3", "4", "5", "6"),xlab='Risk')
+bplot(P,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),xlab='Fration of recirculated air')
+bplot(Den,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),xlab='Particle density')
+
+par(mfcol=c(2,2),cex=1.0) 
+bplot(Mf1,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(1*mu*m),xlab='Mass fraction')
+bplot(Mf3,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(3*mu*m),xlab='Mass fraction')
+bplot(Mf5,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(5*mu*m),xlab='Mass fraction')
+bplot(Mf10,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(10*mu*m),xlab='Mass fraction')
+
+par(mfcol=c(2,2),cex=1.0) 
+bplot(Re1,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(1*mu*m),xlab='Resuspension rate (1/min)')
+bplot(Re3,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(3*mu*m),xlab='Resuspension rate (1/min)')
+bplot(Re5,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(5*mu*m),xlab='Resuspension rate (1/min)')
+bplot(Re10,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(10*mu*m),xlab='Resuspension rate (1/min)')
+
+par(mfcol=c(2,2),cex=1.0) 
+bplot(Vg1,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(1*mu*m),xlab='Settling velocity (m/s)')
+bplot(Vg3,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(3*mu*m),xlab='Settling velocity (m/s)')
+bplot(Vg5,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(5*mu*m),xlab='Settling velocity (m/s)')
+bplot(Vg10,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),main=expression(10*mu*m),xlab='Settling velocity (m/s)')
+
+par(mfcol=c(2,1),cex=1.0) 
+bplot(Ke,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),xlab='Turbulence intensity of exposure stage')
+bplot(Ach,style="quantile",outlier=FALSE,labels=c("Prior", "1", "2", "3", "4", "5", "6"),xlab='Air change rate')
+
+par(mfcol=c(2,3),cex=1.0) 
+bplot(Mass_f00,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main='HVAC filter')
+bplot(Mass_nose00,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main='Nose')
+bplot(Mass_ec_6,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main='Exit the room')
+bplot(Mass_utf_6,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main='Untracked floor')
+bplot(Mass_w_6,style="quantile",outlier=FALSE,log="y",labels=c("Prior", "1", "2", "3", "4", "5", "6"),main='Wall')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
